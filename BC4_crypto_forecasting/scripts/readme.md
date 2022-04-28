@@ -11,7 +11,7 @@
 ## Contributors:
 
 - Rodrigo Guedes
-- Diogo Pires
+- Diogo Pires 7
 - Catarina Garcez
 - Beatriz Selidónio
 
