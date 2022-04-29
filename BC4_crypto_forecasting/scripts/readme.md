@@ -12,8 +12,7 @@
 - Decision of extract the DF for each currency and then, build different models for each one. With this decision, we will work on 10 notebooks.
 - We deleted the rows with Nan values. After that we check duplicates, we changed date to datime.
 - We create new features, pctdif_closeopen and pctdif_highlow to see the differences between close and open values and high and low values.
-- We plot the variation of close values and the differences between close and open values and high and low values.
-
+- 
 
 ## Contributors:
 
