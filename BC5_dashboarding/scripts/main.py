@@ -5,6 +5,8 @@ import tweepy
 from PIL import Image
 import config
 import plotly.graph_objs as go
+from functools import reduce
+import plotly.express as px
 import psycopg2
 import yfinance as yf
 
@@ -23,7 +25,7 @@ st.sidebar.markdown("<h1 style='text-align: center; color: black;'>AA Finance</h
 image = Image.open('assets/aa_finance.jpeg')
 st.sidebar.image(image, caption="Providing investment insights for Investments4Some")
 
-option = st.sidebar.selectbox("Choose a dashboard:",{'Candlecharts','Tweets','Patterns'})
+option = st.sidebar.selectbox("Choose a dashboard:",{'Candlecharts','Compare Assets','Tweets','Patterns'})
 
 
 
@@ -75,7 +77,60 @@ if option == 'Candlecharts':
                     close = data['Close'],
                     name = symbol)])
     fig.update_xaxes(type = 'category')
-    fig.update_layout(height = 800)
+    fig.update_layout(title= symbol + " historical data in the previous 5 years",
+                      autosize = False,
+                      height = 800,
+                      yaxis=dict(
+                          title_text="Asset value in USD",
+                          titlefont=dict(size=15),
+                      )
+                      )
+
+
 
     st.plotly_chart(fig, use_container_width=True)
     st.write(data)
+
+if option == 'Compare Assets':
+    st.subheader('Analyze multiple assets based on their 5 year history')
+    assets = st.sidebar.text_input("List of assets to compare (separated by ,) :", value='AAPL,MCD', max_chars=None, key=None, type='default')
+
+    assets = assets.split(',')
+
+    #Get data from each asset
+    data = []
+    df_list = []
+    i = 0
+    for asset in assets:
+        i += 1
+        ticker = yf.Ticker(asset)
+        str_df = "df_" + str(i)
+
+        #Rename DF's by order (df_1, df_2...)
+        locals()[str_df] = ticker.history(period='5y')[['Close']]
+        locals()[str_df].rename(columns={'Close': 'Close' + '_' + asset}, inplace=True)
+
+        #Get date in column
+        locals()[str_df]['Date'] = locals()[str_df].index.date
+        locals()[str_df].reset_index(drop=True, inplace=True)
+
+        #Store df name in list
+        df_list.append(locals()[str_df])
+
+    #Merge df's
+    df_merged = reduce(lambda left, right: pd.merge(left, right, on='Date', how='outer'), df_list)
+    #Create df with column labels
+    #df = pd.DataFrame(data=[data[i] for i in range(len(assets))]).transpose()
+    #df_merged.set_index(df_merged['Date'], inplace=True, drop=True)
+    #df.columns = assets
+
+    # Create traces
+    fig = go.Figure()
+    asset_list = list(df_merged.columns)
+    asset_list.remove('Date')
+
+    for column in asset_list:
+        fig.add_trace(go.Scatter(x=df_merged['Date'], y=df_merged[column],mode='lines',name=column))
+
+    st.plotly_chart(fig, use_container_width=True)
+    st.write(df_merged)
