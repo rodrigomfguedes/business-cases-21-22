@@ -27,29 +27,55 @@ st.sidebar.image(image, caption="Providing investment insights for Investments4S
 
 option = st.sidebar.selectbox("Choose a dashboard:",{'Candlecharts','Compare Assets','Tweets','Patterns'})
 
-
-
-
 st.header(option)
+
+
+#List to append temporary user profiles that will be shown in the dashboard
+twitter_temp = []
 
 if option == 'Tweets':
     st.subheader('Twitter Dashboard Logic')
-    for username in config.TWITTER_USERNAMES:
-        user = api.get_user(screen_name=username)
-        tweets = api.user_timeline(screen_name=username)
+    asset = st.sidebar.text_input("Search by asset:", value='', max_chars=None, key=None, type='default')
 
-        st.image(user.profile_image_url)
+    new_user = st.sidebar.text_input("Add new twitter account:", value='', max_chars=None, key=None, type='default')
+    if new_user:
+        twitter_temp.append(new_user)
+    #Display latest 3 tweets of each user
+    if not asset:
+        for username in config.TWITTER_USERNAMES+twitter_temp:
+            user = api.get_user(screen_name=username)
+            tweets = api.user_timeline(screen_name=username)
 
-        for tweet in tweets:
-            if '$' in tweet.text:
-                words = tweet.text.split(' ')
-                for word in words:
-                    if word.startswith('$') and word[1:].isalpha():
-                        symbol = word[1:]
-                        st.write(symbol)
-                        st.write(tweet.text)
-                        st.image(f"https://finviz.com/chart.ashx?t={symbol}")
+            st.image(user.profile_image_url)
+            st.subheader(username)
 
+            for tweet in tweets[0:3]:
+                if '$' in tweet.text:
+                    words = tweet.text.split(' ')
+                    for word in words:
+                        if word.startswith('$') and word[1:].isalpha():
+                            symbol = word[1:]
+                            st.write(symbol)
+                            st.write(tweet.text)
+                            st.image(f"https://finviz.com/chart.ashx?t={symbol}")
+                else:
+                    st.write(tweet.text)
+
+
+    #Display comments for specific asset
+    else:
+        for username in config.TWITTER_USERNAMES+twitter_temp:
+            user = api.get_user(screen_name=username)
+            tweets = api.user_timeline(screen_name=username)
+
+            for tweet in tweets:
+                if asset.upper() in tweet.text.upper():
+                    st.image(user.profile_image_url)
+                    st.subheader(username)
+
+                    st.write(asset)
+                    st.write(tweet.text)
+                    st.image(f"https://finviz.com/chart.ashx?t={asset}")
 
 if option == 'Candlecharts':
     symbol = st.sidebar.text_input("Manually input Asset:", value='AAPL', max_chars=None, key=None, type='default')
