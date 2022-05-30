@@ -1,4 +1,4 @@
-streamlit
+streamlit    
 pandas
 plotly
 psycopg2
@@ -10,4 +10,5 @@ matplotlib
 tensorflow
 datetime
 copy
-deepcopy
+
+deepcopy      
