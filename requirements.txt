@@ -8,5 +8,4 @@ yfinance
 matplotlib
 tensorflow
 datetime
-copy
 deepcopy
