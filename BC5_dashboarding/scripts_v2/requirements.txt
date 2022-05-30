@@ -1,0 +1,13 @@
+streamlit
+pandas
+plotly
+psycopg2
+requests
+tweepy
+yfinance
+warnings
+matplotlib
+tensorflow
+datetime
+copy
+deepcopy
