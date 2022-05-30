@@ -5,7 +5,6 @@ psycopg2
 requests
 tweepy
 yfinance
-warnings
 matplotlib
 tensorflow
 datetime
