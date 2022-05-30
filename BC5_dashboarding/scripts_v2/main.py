@@ -18,6 +18,7 @@ from tensorflow.keras import layers
 import cryptoModelsParams
 import datetime
 from copy import deepcopy
+from io import BytesIO
 
 #Setting up the twitter API
 
@@ -30,10 +31,12 @@ api = tweepy.API(auth)
 #connection = psycopg2.connect(host=config.DB_HOST, database=config.DB_NAME, user=config.DB_USER, password=config.DB_PASS)
 #cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-
+url = https://raw.githubusercontent.com/rodrigomfguedes/business-cases-21-22/main/BC5_dashboarding/scripts_v2/assets/aa_finance.jpeg
+response = requests.get(url)
+image = Image.open(BytesIO(response.content)
 #Sidebar config
 st.sidebar.markdown("<h1 style='text-align: center; color: black;'>AA Finance</h1>", unsafe_allow_html=True)
-image = Image.open('assets/aa_finance.jpeg')
+#image = Image.open('assets/aa_finance.jpeg')
 st.sidebar.image(image, caption="Providing investment insights for Investments4Some")
 
 option = st.sidebar.selectbox("Choose a dashboard:",{'Candlecharts','Compare Assets','Tweets','Crypto Predictions'})
