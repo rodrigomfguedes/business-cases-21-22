@@ -4,7 +4,6 @@ plotly
 requests
 tweepy
 yfinance
-warnings
 matplotlib
 tensorflow
 datetime 
