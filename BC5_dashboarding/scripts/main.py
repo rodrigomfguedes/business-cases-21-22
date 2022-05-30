@@ -1,13 +1,10 @@
 import pandas as pd
 import numpy as np
-import streamlit as st
 import tweepy
 from PIL import Image
 import config
 import plotly.graph_objs as go
 from functools import reduce
-import plotly.express as px
-import psycopg2
 import yfinance as yf
 import warnings
 warnings.filterwarnings('ignore')
@@ -18,7 +15,6 @@ tf.random.set_seed(1)
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import layers
-from sklearn.metrics import mean_squared_error
 import cryptoModelsParams
 import datetime
 from copy import deepcopy
